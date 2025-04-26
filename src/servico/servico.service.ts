@@ -9,6 +9,22 @@ export class ServicoService {
 
   constructor(private readonly prisma: PrismaService) { }
 
+  async findAll(): Promise<Servico[]> {
+
+    const servicos = await this.prisma.servico.findMany()
+
+    return servicos
+  }
+
+  async findOne(id: number): Promise<Servico> {
+
+    const servico = await this.prisma.servico.findUnique({
+      where: {id},
+    })
+    
+    return servico
+  }
+
   async create(createServicoDto: CreateServicoDto): Promise<Servico> {
     const data: Prisma.ServicoCreateInput = {
       ...createServicoDto,
@@ -21,27 +37,11 @@ export class ServicoService {
     };
   }
 
-  // async create(createUserDto: CreateServicoDto): Promise<Servico> {
-  //   const data: Prisma.UserCreateInput = {
-  //     ...createUserDto,
-  //     senha: await bcrypt.hash(createUserDto.senha, 10),
-  //   };
-
-  //   const createdUser = await this.prisma.user.create({ data });
-
-  //   return {
-  //     ...createdUser,
-  //     senha: undefined,
-  //   };
-  // }
-
   // findByEmail(email: string) {
   //   return this.prisma.user.findUnique({ where: { email } });
   // }
 
-  // findAll() {
-  //   return `This action returns all user`;
-  // }
+
 
   // findOne(id: number) {
   //   return `This action returns a #${id} user`;

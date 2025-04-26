@@ -7,15 +7,15 @@ import { UpdateAgendamentoDto } from './dto/update-agendamento.dto';
 export class AgendamentoController {
     constructor(private readonly agendamentoService: AgendamentoService) { }
 
+    @Get()
+    findAll() {
+        return this.agendamentoService.findAll();
+    }
+
     @Post()
     create(@Body() createAgendamentoDto: CreateAgendamentoDto) {
         return this.agendamentoService.create(createAgendamentoDto);
     }
-
-    // @Get()
-    // findAll() {
-    //   return this.userService.findAll();
-    // }
 
     // @Get(':id')
     // findOne(@Param('id') id: string) {
