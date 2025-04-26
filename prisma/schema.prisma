@@ -20,7 +20,7 @@ model Servico {
   nome        String
   duracao     Int
   preco       Float
-  Agendamento Agendamento[]
+  agendamento Agendamento[]
 }
 
 model Agendamento {
