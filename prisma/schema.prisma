@@ -12,7 +12,13 @@ model User {
   nome        String
   email       String        @unique
   senha       String
+  role        Role          @default(USER)
   agendamento Agendamento[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Servico {
