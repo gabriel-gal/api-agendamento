@@ -23,6 +23,17 @@ export class AgendamentoService {
         return agendamentos
     }
 
+    async findByUserId(usuarioId: number): Promise<Agendamento[]> {
+        const agendamentos = await this.prisma.agendamento.findMany({
+            where: { usuarioId },
+            include: { servico: true },
+        });
+        if (!agendamentos) {
+            throw new NotFoundException(`Nenhum agendamento cadastrado`);
+        }
+        return agendamentos
+    }
+
     async findOne(id: number): Promise<Agendamento> {
         const agendamento = await this.prisma.agendamento.findUnique({
             where: { id },
@@ -35,6 +46,17 @@ export class AgendamentoService {
             throw new NotFoundException(`Agendamento com ID ${id} não encontrado`);
         }
         return agendamento
+    }
+
+    async findOneByUser(id: number, userId: number): Promise<Agendamento> {
+        const agendamento = await this.prisma.agendamento.findUnique({
+            where: { id },
+            include: { servico: true },
+        });
+        if (!agendamento || agendamento.usuarioId !== userId) {
+            throw new NotFoundException('Você não tem permissão para ver este agendamento');
+        }
+        return agendamento;
     }
 
     async create(createAgendamentoDto: CreateAgendamentoDto): Promise<Agendamento> {
@@ -88,20 +110,20 @@ export class AgendamentoService {
         return agendamentoAtualizado
     }
 
-    async remove(id: number): Promise<Agendamento> {
-        const agendamentoExiste = await this.prisma.agendamento.findUnique({
-            where: { id },
-        });
-        if (!agendamentoExiste) {
-            throw new NotFoundException(`Agendamento com ID ${id} não encontrado`)
-        }
-        const deleteAgendamento = await this.prisma.agendamento.delete({
-            where: { id },
-            include: {
-                usuario: true,
-                servico: true,
-            }
-        })
-        return deleteAgendamento
-    }
+    // async remove(id: number): Promise<Agendamento> {
+    //     const agendamentoExiste = await this.prisma.agendamento.findUnique({
+    //         where: { id },
+    //     });
+    //     if (!agendamentoExiste) {
+    //         throw new NotFoundException(`Agendamento com ID ${id} não encontrado`)
+    //     }
+    //     const deleteAgendamento = await this.prisma.agendamento.delete({
+    //         where: { id },
+    //         include: {
+    //             usuario: true,
+    //             servico: true,
+    //         }
+    //     })
+    //     return deleteAgendamento
+    // }
 }
